@@ -33,7 +33,8 @@ async function run() {
         await client.connect();
 
 
-        const productCollection = client.db("productDB").collection("product")
+        const productCollection = client.db("productDB").collection("product");
+        const cartCollection = client.db('productDB').collection("cart");
 
 
         app.get('/product', async (req, res) => {
@@ -48,6 +49,21 @@ async function run() {
             const query = { _id: new ObjectId(id) }
             const result = await productCollection.findOne(query);
             res.send(result);
+        })
+
+        app.get("/product/brand/:brand", async( req,res ) =>{
+            const brand = req.params.brand;
+            console.log(brand)
+            const result = await productCollection.find({brand}).toArray()
+            console.log(result)
+            res.send(result)
+        })
+
+        app.get("/product/brand_name/brand_name/:brand_name", async( req,res ) =>{
+            const brand_name = req.params.brand_name;
+            const result = await productCollection.find({brand_name}).toArray()
+            console.log(result)
+            res.send(result)
         })
 
 
@@ -77,6 +93,27 @@ async function run() {
             }
 
             const result = await productCollection.updateOne(filter, updated, options);
+            res.send(result);
+        })
+
+        app.get("/cart/:email", async( req,res ) =>{
+            const email = req.params.email
+            const result = await cartCollection.find({email}).toArray()
+            res.send(result)
+        })
+
+        app.delete('/cart/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await cartCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        app.post('/cart', async (req, res) => {
+            const newProduct = req.body;
+            delete newProduct._id
+            console.log(newProduct);
+            const result = await cartCollection.insertOne(newProduct);
             res.send(result);
         })
 

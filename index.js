@@ -59,12 +59,12 @@ async function run() {
             res.send(result)
         })
 
-        // app.get("/product/brand_name/brand_name/:brand_name", async( req,res ) =>{
-        //     const brand_name = req.params.brand_name;
-        //     const result = await productCollection.find({brand_name}).toArray()
-        //     console.log(result)
-        //     res.send(result)
-        // })
+        app.get("/product/brand_name/brand_name/:brand_name", async( req,res ) =>{
+            const brand_name = req.params.brand_name;
+            const result = await productCollection.find({brand_name}).toArray()
+            console.log(result)
+            res.send(result)
+        })
 
 
         app.post('/product', async (req, res) => {
